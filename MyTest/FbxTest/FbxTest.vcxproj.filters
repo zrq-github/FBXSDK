@@ -18,5 +18,13 @@
     <ClCompile Include="FbxTest.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="FbxSdkHelp.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FbxSdkHelp.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

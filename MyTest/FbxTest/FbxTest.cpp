@@ -1,13 +1,18 @@
-﻿// FbxTest.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
+// FbxTest.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 
 #include <iostream>
 #include <fbxsdk.h>
 
+#include "FbxSdkHelp.h"
+
 int main()
 {
-    std::cout << "Hello World!\n";
-    FbxManager* fbxMange;
+	FbxSdkHelp fbxSdkHelp;
+	//fbxSdkHelp.RunMyFirstProgrammer();
+    //fbxSdkHelp.RunAddFbxNode();
+    //fbxSdkHelp.RunFbxProperty();
+    fbxSdkHelp.RunCreateMeshes();
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
