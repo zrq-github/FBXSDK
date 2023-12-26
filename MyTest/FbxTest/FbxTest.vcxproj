@@ -116,7 +116,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>D:\Program Files\Autodesk\FBX\FBX SDK\2020.3.4\lib\vs2022\x64\$(Configuration)\libfbxsdk-mt.lib;D:\Program Files\Autodesk\FBX\FBX SDK\2020.3.4\lib\vs2022\x64\$(Configuration)\libxml2-mt.lib;D:\Program Files\Autodesk\FBX\FBX SDK\2020.3.4\lib\vs2022\x64\$(Configuration)\zlib-mt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(FBXSDK)\2020.3.4\lib\vs2022\x64\$(Configuration)\libfbxsdk-mt.lib;$(FBXSDK)\2020.3.4\lib\vs2022\x64\$(Configuration)\libxml2-mt.lib;$(FBXSDK)\2020.3.4\lib\vs2022\x64\$(Configuration)\zlib-mt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

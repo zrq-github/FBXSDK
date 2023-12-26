@@ -3,16 +3,16 @@
 
 #include <iostream>
 #include <fbxsdk.h>
+#include <map>
 
 #include "FbxSdkHelp.h"
 
 int main()
 {
-	FbxSdkHelp fbxSdkHelp;
-	//fbxSdkHelp.RunMyFirstProgrammer();
-    //fbxSdkHelp.RunAddFbxNode();
-    //fbxSdkHelp.RunFbxProperty();
-    fbxSdkHelp.RunCreateMeshes();
+    FbxSdkHelp fbxSdkHelp;
+    //fbxSdkHelp.RunCreateCubeWithTexture();
+    //fbxSdkHelp.RunReadCubeWithTexture();
+    //fbxSdkHelp.RunReadSelfMaterials();
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
