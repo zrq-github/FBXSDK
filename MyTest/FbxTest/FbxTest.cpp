@@ -13,6 +13,7 @@ int main()
     //fbxSdkHelp.RunCreateCubeWithTexture();
     //fbxSdkHelp.RunReadCubeWithTexture();
     //fbxSdkHelp.RunReadSelfMaterials();
+    fbxSdkHelp.RunTestFbxMatrixMajor();
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单

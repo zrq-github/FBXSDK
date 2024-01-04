@@ -31,12 +31,13 @@ public:
     void RunCreateCubeWithTexture();
     /// @brief 读取带有材质的Cube
     void RunReadCubeWithTexture();
-
     /// @brief 导出场景
     void ExportScene(FbxScene* pFbxScene, std::string path = "");
-
     /// @brief 读取指定文件的材质
     void RunReadSelfMaterials();
+    /// @brief 测试FBX.SDK中矩阵运算的主序
+    /// @details 
+    void RunTestFbxMatrixMajor();
 
 public:
     /// @brief 获取EXE路径
@@ -45,6 +46,7 @@ public:
     static bool IsMeshNode(FbxNode* pFbxNode);
     /// @brief 三角化
     static void TriangulateScene(FbxScene* pScene);
+
 
 private: // Creating a material
 

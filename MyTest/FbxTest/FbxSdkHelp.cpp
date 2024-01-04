@@ -578,6 +578,45 @@ void FbxSdkHelp::RunReadSelfMaterials()
     }
 }
 
+void FbxSdkHelp::RunTestFbxMatrixMajor()
+{
+    // 定义平移、旋转、缩放向量
+    FbxVector4 translation(0, 0, 0);
+    FbxVector4 rotation(-90.0, 0, 0.0);  // 绕Y轴旋转90度
+    FbxVector4 scaling(1.0, 1.0, 2.0);
+
+    FbxAMatrix matrix;
+    // 设置平移部分
+    matrix.SetT(translation);
+    // 设置旋转部分（绕Y轴旋转）
+    matrix.SetR(rotation);
+    // 设置缩放部分
+    matrix.SetS(scaling);
+
+    FbxVector4 vertex0(1, 1, 1);
+    
+    FbxVector4 row0 = matrix.GetRow(0);
+    FbxVector4 row1 = matrix.GetRow(1);
+    FbxVector4 row2 = matrix.GetRow(1);
+    FbxVector4 row3 = matrix.GetRow(3);
+
+    FbxVector4 column0 = matrix.GetColumn(0);
+    FbxVector4 column1 = matrix.GetColumn(1);
+    FbxVector4 column2 = matrix.GetColumn(2);
+    FbxVector4 column3 = matrix.GetColumn(3);
+
+    for(int i=0;i<4;i++)
+    {
+        FbxVector4 row = matrix.GetRow(i);
+
+        for (int j=0;j<4;j++)
+        {
+            printf("%f ", row[j]);
+        }
+        printf("\n");
+    }
+}
+
 FbxMesh* FbxSdkHelp::CreateFbxMesh()
 {
     FbxNode* pRootNode = m_pScene->GetRootNode();
