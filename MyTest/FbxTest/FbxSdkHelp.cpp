@@ -1,8 +1,9 @@
+﻿#include "FbxSdkHelp.h"
+
+#include <fbxsdk.h>
+
 #include <Windows.h>
 #include <string>
-#include <fbxsdk.h>
-#include "FbxSdkHelp.h"
-
 
 FbxSdkHelp::FbxSdkHelp()
 {
@@ -104,7 +105,9 @@ void FbxSdkHelp::RunCreateMeshes()
 
 void FbxSdkHelp::RunCreateMaterials()
 {
-    auto pNode = CreatePyramidWithMaterials(m_pScene, "mesh_materials");
+    FbxNode* pNode = CreatePyramid(m_pScene, "mesh_materials");
+    CreatePyramidMaterials(m_pScene, pNode->GetMesh());
+
     m_pScene->GetRootNode()->AddChild(pNode);
 
     auto saveFilePath = GetExePath().append("\\").append(m_PyramidWithMaterials);
@@ -278,7 +281,9 @@ void FbxSdkHelp::RunCreateMeshNoPlane()
 
 void FbxSdkHelp::RunCreateCubeWithTexture()
 {
-    auto pFbxNode = CreateCubeWithTexture(m_pScene, (char*)"cube");
+    FbxNode* pFbxNode = CreateCube(m_pScene, (char*)"cube");
+    CreateCubeTexture(m_pScene, pFbxNode->GetMesh());
+
     auto pRootNode = m_pScene->GetRootNode();
     pRootNode->AddChild(pFbxNode);
 
@@ -499,7 +504,7 @@ void FbxSdkHelp::RunReadSelfMaterials()
     {
     }
 
-    auto rootNode = m_pScene->GetRootNode();
+    FbxNode* rootNode = m_pScene->GetRootNode();
     int childCount = rootNode->GetChildCount();
     for (auto i = 0; i < childCount; i++)
     {
@@ -617,7 +622,32 @@ void FbxSdkHelp::RunTestFbxMatrixMajor()
     }
 }
 
-FbxMesh* FbxSdkHelp::CreateFbxMesh()
+void FbxSdkHelp::RunCreateNode_ParentAndParentWithMesh()
+{
+    // 获取根节点
+    FbxNode* rootNode = m_pScene->GetRootNode();
+
+    FbxNode* cubeNode = CreateCube(m_pScene, "Cube_Center");
+    FbxNode* pyramidNode = CreatePyramid(m_pScene, "Pyramid");
+    FbxNode* triangle = CreateTriangle(m_pScene, "Triangle");
+
+    rootNode->AddChild(cubeNode);
+    cubeNode->AddChild(pyramidNode);
+    cubeNode->AddChild(triangle);
+    pyramidNode->LclTranslation.Set(FbxVector4(150, 0, 0));
+    triangle->LclTranslation.Set(FbxVector4(300, 0, 0));
+
+    FbxNode* cubeNode0 = CreateCube(m_pScene, "Cube_0");
+    FbxNode* cubeNode1 = CreateCube(m_pScene, "Cube_1");
+    cubeNode->AddChild(cubeNode0);
+    cubeNode0->AddChild(cubeNode1);
+    cubeNode0->LclTranslation.Set(FbxVector4(0, 150, 0));
+    cubeNode1->LclTranslation.Set(FbxVector4(0, 300, 0));
+
+    ExportScene(m_pScene, GetExePath() + "\\ParentAndParentWithMesh.fbx");
+}
+
+FbxMesh* FbxSdkHelp::CreateFbxMeshNode()
 {
     FbxNode* pRootNode = m_pScene->GetRootNode();
 
@@ -630,7 +660,7 @@ FbxMesh* FbxSdkHelp::CreateFbxMesh()
     return pMesh;
 }
 
-FbxNode* FbxSdkHelp::CreateFbxNode(FbxScene* pFbxScene)
+FbxNode* FbxSdkHelp::CreateFbxNodeWithChildNode(FbxScene* pFbxScene)
 {
     auto pRotNode = pFbxScene->GetRootNode();
     auto pChild = FbxNode::Create(pFbxScene, "child");
@@ -725,7 +755,7 @@ void FbxSdkHelp::CreateOctahedron(FbxMesh* pMesh)
     pMesh->EndPolygon();
 }
 
-void FbxSdkHelp::CreateMaterials(FbxScene* pScene, FbxMesh* pMesh)
+void FbxSdkHelp::CreatePyramidMaterials(FbxScene* pScene, FbxMesh* pMesh)
 {
     int i;
     int defaultIndex = 5;
@@ -757,10 +787,40 @@ void FbxSdkHelp::CreateMaterials(FbxScene* pScene, FbxMesh* pMesh)
     }
 }
 
-FbxNode* FbxSdkHelp::CreatePyramidWithMaterials(FbxScene* pScene, const char* pName)
+FbxNode* FbxSdkHelp::CreateTriangle(FbxScene* pScene, const char* pName)
+{
+    FbxMesh* lMesh = FbxMesh::Create(pScene, pName);
+
+    // The three vertices
+    FbxVector4 lControlPoint0(-50, 0, 50);
+    FbxVector4 lControlPoint1(50, 0, 50);
+    FbxVector4 lControlPoint2(0, 50, -50);
+
+    // Create control points.
+    lMesh->InitControlPoints(3);
+    FbxVector4* lControlPoints = lMesh->GetControlPoints();
+
+    lControlPoints[0] = lControlPoint0;
+    lControlPoints[1] = lControlPoint1;
+    lControlPoints[2] = lControlPoint2;
+
+    // Create the triangle's polygon
+    lMesh->BeginPolygon();
+    lMesh->AddPolygon(0); // Control point 0
+    lMesh->AddPolygon(1); // Control point 1
+    lMesh->AddPolygon(2); // Control point 2
+    lMesh->EndPolygon();
+
+    FbxNode* lNode = FbxNode::Create(pScene, pName);
+    lNode->SetNodeAttribute(lMesh);
+
+    return lNode;
+}
+
+FbxNode* FbxSdkHelp::CreatePyramid(FbxScene* pScene, const char* pName)
 {
     int i, j;
-    FbxMesh* lMesh = FbxMesh::Create(pScene, pName);
+    FbxMesh* lMesh = FbxMesh::Create(pScene, std::string(pName).append("_mesh").c_str());
 
     FbxVector4 vertex0(-50, 0, 50);
     FbxVector4 vertex1(50, 0, 50);
@@ -859,12 +919,8 @@ FbxNode* FbxSdkHelp::CreatePyramidWithMaterials(FbxScene* pScene, const char* pN
     }
 
 
-    FbxNode* lNode = FbxNode::Create(pScene, pName);
-
+    FbxNode* lNode = FbxNode::Create(pScene, std::string(pName).append("_node").c_str());
     lNode->SetNodeAttribute(lMesh);
-
-    CreateMaterials(pScene, lMesh);
-
     return lNode;
 }
 
@@ -915,14 +971,6 @@ void FbxSdkHelp::InitializeSdkObjects(FbxManager*& pManager, FbxScene*& pScene)
 
 void FbxSdkHelp::CreateMesh_NoPlane(FbxMesh* pMesh)
 {
-    //FbxVector4 vertices[4] =
-    //{
-    //FbxVector4(3.7122759819030762, 35.287723541259766, 0.0089429616928100586),
-    //FbxVector4(4.4840807914733887, 35.350677490234375, -0.16514968872070312),
-    //FbxVector4(4.8528618812561035, 35.959125518798828, -0.13446664810180664),
-    //FbxVector4(4.0222420692443848, 35.799133300781250, 0.083148837089538574)
-    //};
-
     FbxVector4 vertices[4] = {
         FbxVector4(0, 0, 0),
         FbxVector4(0, 10, 0),
@@ -1069,7 +1117,7 @@ void FbxSdkHelp::TriangulateScene(FbxScene* pScene)
     }
 }
 
-void FbxSdkHelp::CreateTexture(FbxScene* pScene, FbxMesh* pMesh)
+void FbxSdkHelp::CreateCubeTexture(FbxScene* pScene, FbxMesh* pMesh)
 {
     // A texture need to be connected to a property on the material,
 // so let's use the material (if it exists) or create a new one
@@ -1155,10 +1203,10 @@ void FbxSdkHelp::CreateTexture(FbxScene* pScene, FbxMesh* pMesh)
         lMaterial->Emissive.ConnectSrcObject(lTexture);
 }
 
-FbxNode* FbxSdkHelp::CreateCubeWithTexture(FbxScene* pScene, char* pName)
+FbxNode* FbxSdkHelp::CreateCube(FbxScene* pScene,const char* pName)
 {
     int i, j;
-    FbxMesh* lMesh = FbxMesh::Create(pScene, pName);
+    FbxMesh* lMesh = FbxMesh::Create(pScene, std::string(pName).append("_mesh").c_str());
 
     FbxVector4 lControlPoint0(-50, 0, 50);
     FbxVector4 lControlPoint1(50, 0, 50);
@@ -1357,8 +1405,6 @@ FbxNode* FbxSdkHelp::CreateCubeWithTexture(FbxScene* pScene, char* pName)
         //textures on more than just the default (diffuse) channel.
         lMesh->BeginPolygon(-1, -1, false);
 
-
-
         for (j = 0; j < 4; j++)
         {
             //this function points 
@@ -1374,15 +1420,10 @@ FbxNode* FbxSdkHelp::CreateCubeWithTexture(FbxScene* pScene, char* pName)
         lMesh->EndPolygon();
     }
 
-    FbxNode* lNode = FbxNode::Create(pScene, pName);
+    FbxNode* lNode = FbxNode::Create(pScene, std::string(pName).append("_node").c_str());
 
     lNode->SetNodeAttribute(lMesh);
     lNode->SetShadingMode(FbxNode::eTextureShading);
-
-    CreateTexture(pScene, lMesh);
-
-    const FbxGeometryElementMaterial* elementMaterial = lMesh->GetElementMaterial();
-
 
     return lNode;
 }

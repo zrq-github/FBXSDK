@@ -1,4 +1,4 @@
-// FbxTest.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
+﻿// FbxTest.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 
 #include <iostream>
@@ -13,7 +13,8 @@ int main()
     //fbxSdkHelp.RunCreateCubeWithTexture();
     //fbxSdkHelp.RunReadCubeWithTexture();
     //fbxSdkHelp.RunReadSelfMaterials();
-    fbxSdkHelp.RunTestFbxMatrixMajor();
+    //fbxSdkHelp.RunTestFbxMatrixMajor();
+    fbxSdkHelp.RunCreateNode_ParentAndParentWithMesh();
 }
 
 // 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
